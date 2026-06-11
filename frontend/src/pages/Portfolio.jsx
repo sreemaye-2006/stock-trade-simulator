@@ -11,8 +11,8 @@ export default function Portfolio({ token, darkMode }) {
     setLoading(true);
     try {
       const [userRes, stocksRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/user', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('http://localhost:5000/api/stocks')
+        axios.get(' https://stock-trade-simulator.onrender.com/api/user', { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(' https://stock-trade-simulator.onrender.com/api/stocks')
       ]);
       setUser(userRes.data);
       setStocks(stocksRes.data);
