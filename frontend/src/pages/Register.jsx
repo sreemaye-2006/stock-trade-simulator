@@ -14,7 +14,7 @@ export default function Register({ darkMode }) {
     e.preventDefault();
     setError('');
     try {
-      await axios.post('http://localhost:5000/api/auth/register', { username, password });
+      await axios.post(' https://stock-trade-simulator.onrender.com/api/auth/register', { username, password });
       setSuccess(true);
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
