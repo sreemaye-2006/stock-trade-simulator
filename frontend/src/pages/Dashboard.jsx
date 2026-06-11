@@ -15,7 +15,7 @@ export default function Dashboard({ token, darkMode }) {
 
   const fetchUserData = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/user', {
+      const res = await axios.get(' https://stock-trade-simulator.onrender.com/api/user', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(res.data);
@@ -26,7 +26,7 @@ export default function Dashboard({ token, darkMode }) {
 
   const fetchStocks = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/stocks');
+      const res = await axios.get(' https://stock-trade-simulator.onrender.com/api/stocks');
       setStocks(res.data);
       if (res.data.length > 0 && !selectedStock) {
         setSelectedStock(res.data[0]);
@@ -48,7 +48,7 @@ export default function Dashboard({ token, darkMode }) {
 
   const handleWatchlistToggle = async (symbol) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/user/watchlist', { symbol }, {
+      const res = await axios.post(' https://stock-trade-simulator.onrender.com/api/user/watchlist', { symbol }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(prev => ({ ...prev, watchlist: res.data.watchlist }));
@@ -63,7 +63,7 @@ export default function Dashboard({ token, darkMode }) {
       return;
     }
     try {
-      const url = `http://localhost:5000/api/trade/${action.toLowerCase()}`;
+      const url = ` https://stock-trade-simulator.onrender.com/api/trade/${action.toLowerCase()}`;
       const res = await axios.post(url, {
         symbol: selectedStock.symbol,
         quantity: parseInt(tradeQuantity)
