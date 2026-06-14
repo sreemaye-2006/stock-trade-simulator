@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Briefcase, TrendingUp, TrendingDown, Clock, ArrowRightLeft } from 'lucide-react';
 
-export default function Portfolio({ token, darkMode }) {
+export default function Portfolio({ token }) {
   const [user, setUser] = useState(null);
   const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,8 +11,8 @@ export default function Portfolio({ token, darkMode }) {
     setLoading(true);
     try {
       const [userRes, stocksRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/user', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('http://localhost:5000/api/stocks')
+        axios.get('https://stock-trade-simulator.onrender.com/api/user', { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get('https://stock-trade-simulator.onrender.com/api/stocks')
       ]);
       setUser(userRes.data);
       setStocks(stocksRes.data);
@@ -29,7 +29,7 @@ export default function Portfolio({ token, darkMode }) {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
-        <div className={`animate-spin rounded-full h-12 w-12 border-t-2 ${darkMode ? 'border-indigo-400' : 'border-indigo-600'}`}></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-indigo-400"></div>
       </div>
     );
   }
@@ -44,13 +44,13 @@ export default function Portfolio({ token, darkMode }) {
   const totalProfitLoss = currentValue - totalInvested;
   const profitPercentage = totalInvested > 0 ? (totalProfitLoss / totalInvested) * 100 : 0;
 
-  // Theme variable styles
-  const cardBg = darkMode ? 'bg-slate-800 border-slate-700 shadow-slate-950/40' : 'bg-white border-slate-200 shadow-slate-200/40';
-  const textTitle = darkMode ? 'text-white' : 'text-slate-900';
-  const textMuted = darkMode ? 'text-slate-400' : 'text-slate-500';
-  const tableHeaderBg = darkMode ? 'bg-slate-900/30' : 'bg-slate-50';
-  const borderCol = darkMode ? 'border-slate-700' : 'border-slate-200';
-  const rowHover = darkMode ? 'hover:bg-slate-750/30' : 'hover:bg-slate-50/50';
+  // Theme variable styles (unconditionally dark themed)
+  const cardBg = 'bg-slate-800 border-slate-700 shadow-slate-950/40';
+  const textTitle = 'text-white';
+  const textMuted = 'text-slate-400';
+  const tableHeaderBg = 'bg-slate-900/30';
+  const borderCol = 'border-slate-700';
+  const rowHover = 'hover:bg-slate-750/30';
 
   return (
     <div className="space-y-8 transition-colors duration-300">
@@ -81,7 +81,7 @@ export default function Portfolio({ token, darkMode }) {
       {/* Portfolio Table */}
       <div className={`${cardBg} rounded-2xl border overflow-hidden shadow-lg`}>
         <div className={`px-6 py-4 border-b ${borderCol} flex items-center gap-2`}>
-          <Briefcase size={20} className={darkMode ? 'text-indigo-400' : 'text-indigo-600'} />
+          <Briefcase size={20} className="text-indigo-400" />
           <h3 className={`text-lg font-bold ${textTitle}`}>Your Assets</h3>
         </div>
         <div className="overflow-x-auto">
@@ -96,7 +96,7 @@ export default function Portfolio({ token, darkMode }) {
                 <th className="px-6 py-3 text-right">Profit / Loss</th>
               </tr>
             </thead>
-            <tbody className={`divide-y ${darkMode ? 'divide-slate-700/50' : 'divide-slate-200'} text-sm`}>
+            <tbody className="divide-y divide-slate-700/50 text-sm">
               {portfolio.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="text-center py-12 text-slate-500">
@@ -116,9 +116,9 @@ export default function Portfolio({ token, darkMode }) {
                         <span className={`font-bold ${textTitle} block`}>{p.symbol}</span>
                         <span className="text-xs text-slate-500">{stocks.find(s => s.symbol === p.symbol)?.name}</span>
                       </td>
-                      <td className={`px-6 py-4 font-semibold ${darkMode ? 'text-slate-200' : 'text-slate-700'}`}>{p.quantity}</td>
-                      <td className={`px-6 py-4 text-right font-medium ${darkMode ? 'text-slate-300' : 'text-slate-600'}`}>₹{p.averagePrice.toFixed(2)}</td>
-                      <td className={`px-6 py-4 text-right font-medium ${darkMode ? 'text-slate-300' : 'text-slate-600'}`}>₹{currentPrice.toFixed(2)}</td>
+                      <td className="px-6 py-4 font-semibold text-slate-200">{p.quantity}</td>
+                      <td className="px-6 py-4 text-right font-medium text-slate-300">₹{p.averagePrice.toFixed(2)}</td>
+                      <td className="px-6 py-4 text-right font-medium text-slate-300">₹{currentPrice.toFixed(2)}</td>
                       <td className={`px-6 py-4 text-right font-bold ${textTitle}`}>₹{marketValue.toFixed(2)}</td>
                       <td className={`px-6 py-4 text-right font-bold ${isProfit ? 'text-emerald-500' : 'text-red-500'}`}>
                         ₹{pl.toFixed(2)}
@@ -135,7 +135,7 @@ export default function Portfolio({ token, darkMode }) {
       {/* Transaction History */}
       <div className={`${cardBg} rounded-2xl border overflow-hidden shadow-lg`}>
         <div className={`px-6 py-4 border-b ${borderCol} flex items-center gap-2`}>
-          <Clock size={20} className={darkMode ? 'text-indigo-400' : 'text-indigo-600'} />
+          <Clock size={20} className="text-indigo-400" />
           <h3 className={`text-lg font-bold ${textTitle}`}>Transaction History</h3>
         </div>
         <div className="overflow-x-auto">
@@ -150,7 +150,7 @@ export default function Portfolio({ token, darkMode }) {
                 <th className="px-6 py-3 text-right">Date</th>
               </tr>
             </thead>
-            <tbody className={`divide-y ${darkMode ? 'divide-slate-700/50' : 'divide-slate-200'} text-sm`}>
+            <tbody className="divide-y divide-slate-700/50 text-sm">
               {!user?.transactions || user.transactions.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="text-center py-12 text-slate-500">
@@ -169,8 +169,8 @@ export default function Portfolio({ token, darkMode }) {
                         </span>
                       </td>
                       <td className={`px-6 py-4 font-bold ${textTitle}`}>{t.symbol}</td>
-                      <td className={`px-6 py-4 font-semibold ${darkMode ? 'text-slate-200' : 'text-slate-700'}`}>{t.quantity}</td>
-                      <td className={`px-6 py-4 text-right font-medium ${darkMode ? 'text-slate-300' : 'text-slate-600'}`}>₹{t.price.toFixed(2)}</td>
+                      <td className="px-6 py-4 font-semibold text-slate-200">{t.quantity}</td>
+                      <td className="px-6 py-4 text-right font-medium text-slate-300">₹{t.price.toFixed(2)}</td>
                       <td className={`px-6 py-4 text-right font-bold ${textTitle}`}>₹{(t.quantity * t.price).toFixed(2)}</td>
                       <td className="px-6 py-4 text-right text-slate-500 text-xs">
                         {new Date(t.date).toLocaleString()}

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Search, Star, DollarSign, Wallet, ArrowUpRight, ArrowDownRight, RefreshCw } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
 
-export default function Dashboard({ token, darkMode }) {
+export default function Dashboard({ token }) {
   const [stocks, setStocks] = useState([]);
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState('');
@@ -15,7 +15,7 @@ export default function Dashboard({ token, darkMode }) {
 
   const fetchUserData = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/user', {
+      const res = await axios.get(' https://stock-trade-simulator.onrender.com/api/user', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(res.data);
@@ -26,7 +26,7 @@ export default function Dashboard({ token, darkMode }) {
 
   const fetchStocks = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/stocks');
+      const res = await axios.get(' https://stock-trade-simulator.onrender.com/api/stocks');
       setStocks(res.data);
       if (res.data.length > 0 && !selectedStock) {
         setSelectedStock(res.data[0]);
@@ -48,7 +48,7 @@ export default function Dashboard({ token, darkMode }) {
 
   const handleWatchlistToggle = async (symbol) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/user/watchlist', { symbol }, {
+      const res = await axios.post(' https://stock-trade-simulator.onrender.com/api/user/watchlist', { symbol }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(prev => ({ ...prev, watchlist: res.data.watchlist }));
@@ -63,7 +63,7 @@ export default function Dashboard({ token, darkMode }) {
       return;
     }
     try {
-      const url = `http://localhost:5000/api/trade/${action.toLowerCase()}`;
+      const url = ` https://stock-trade-simulator.onrender.com/api/trade/${action.toLowerCase()}`;
       const res = await axios.post(url, {
         symbol: selectedStock.symbol,
         quantity: parseInt(tradeQuantity)
@@ -102,18 +102,18 @@ export default function Dashboard({ token, darkMode }) {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-[60vh]">
-        <div className={`animate-spin rounded-full h-12 w-12 border-t-2 ${darkMode ? 'border-indigo-400' : 'border-indigo-600'}`}></div>
-      </div>
+        <div className="flex justify-center items-center h-[60vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-indigo-400"></div>
+        </div>
     );
   }
 
-  // Define Mode-based style constants
-  const cardBg = darkMode ? 'bg-slate-800 border-slate-700 shadow-slate-950/40' : 'bg-white border-slate-200 shadow-slate-200/40';
-  const textTitle = darkMode ? 'text-white' : 'text-slate-900';
-  const textMuted = darkMode ? 'text-slate-400' : 'text-slate-500';
-  const inputBg = darkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300 text-slate-900';
-  const itemHover = darkMode ? 'hover:bg-slate-700/30' : 'hover:bg-slate-100/50';
+  // Define style constants (unconditionally dark themed)
+  const cardBg = 'bg-slate-800 border-slate-700 shadow-slate-950/40';
+  const textTitle = 'text-white';
+  const textMuted = 'text-slate-400';
+  const inputBg = 'bg-slate-900 border-slate-700 text-white';
+  const itemHover = 'hover:bg-slate-700/30';
 
   return (
     <div className="space-y-6 transition-colors duration-300">
@@ -156,7 +156,7 @@ export default function Dashboard({ token, darkMode }) {
           </div>
           <button 
             onClick={initData} 
-            className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-slate-700 text-slate-400 hover:text-white' : 'hover:bg-slate-100 text-slate-500 hover:text-slate-900'}`}
+            className="p-2 rounded-lg transition-colors hover:bg-slate-700 text-slate-400 hover:text-white"
             title="Refresh Stock Prices"
           >
             <RefreshCw size={18} />
@@ -184,7 +184,7 @@ export default function Dashboard({ token, darkMode }) {
             </div>
             <button
               onClick={() => setWatchlistOnly(!watchlistOnly)}
-              className={`p-2 rounded-lg border transition-all ${watchlistOnly ? 'bg-indigo-600 border-indigo-500 text-white' : `${darkMode ? 'bg-slate-900 border-slate-700 text-slate-400' : 'bg-slate-100 border-slate-300 text-slate-600'} hover:text-indigo-500`}`}
+              className={`p-2 rounded-lg border transition-all ${watchlistOnly ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-slate-900 border-slate-700 text-slate-400 hover:text-indigo-500'}`}
               title="Filter Watchlist"
             >
               <Star size={16} fill={watchlistOnly ? 'currentColor' : 'none'} />
@@ -246,7 +246,7 @@ export default function Dashboard({ token, darkMode }) {
                 <div>
                   <div className="flex items-center gap-3">
                     <h2 className={`text-2xl font-bold ${textTitle}`}>{selectedStock.name}</h2>
-                    <span className={`px-2 py-0.5 rounded text-sm font-semibold ${darkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600'}`}>{selectedStock.symbol}</span>
+                    <span className="px-2 py-0.5 rounded text-sm font-semibold bg-slate-700 text-slate-300">{selectedStock.symbol}</span>
                   </div>
                   <p className={`${textMuted} text-sm mt-1`}>Real-time simulator stock chart</p>
                 </div>
@@ -268,11 +268,11 @@ export default function Dashboard({ token, darkMode }) {
                         <stop offset="95%" stopColor={selectedStock.change >= 0 ? '#10b981' : '#ef4444'} stopOpacity={0}/>
                       </linearGradient>
                     </defs>
-                    <XAxis dataKey="day" stroke={darkMode ? "#475569" : "#94a3b8"} fontSize={11} tickLine={false} />
-                    <YAxis domain={['auto', 'auto']} stroke={darkMode ? "#475569" : "#94a3b8"} fontSize={11} tickLine={false} axisLine={false} />
+                    <XAxis dataKey="day" stroke="#475569" fontSize={11} tickLine={false} />
+                    <YAxis domain={['auto', 'auto']} stroke="#475569" fontSize={11} tickLine={false} axisLine={false} />
                     <Tooltip 
-                      contentStyle={darkMode ? { backgroundColor: '#1e293b', borderColor: '#475569', borderRadius: '8px', color: '#f8fafc' } : { backgroundColor: '#ffffff', borderColor: '#cbd5e1', borderRadius: '8px', color: '#0f172a' }}
-                      labelClassName={darkMode ? "text-slate-400" : "text-slate-500"}
+                      contentStyle={{ backgroundColor: '#1e293b', borderColor: '#475569', borderRadius: '8px', color: '#f8fafc' }}
+                      labelClassName="text-slate-400"
                     />
                     <Area type="monotone" dataKey="price" stroke={selectedStock.change >= 0 ? '#10b981' : '#ef4444'} strokeWidth={2} fillOpacity={1} fill="url(#colorPrice)" />
                   </AreaChart>
@@ -281,13 +281,13 @@ export default function Dashboard({ token, darkMode }) {
             </div>
 
             {/* Trading Box */}
-            <div className={`p-4 rounded-xl border mt-6 space-y-4 ${darkMode ? 'bg-slate-900/60 border-slate-700/50' : 'bg-slate-50 border-slate-200'}`}>
+            <div className="p-4 rounded-xl border mt-6 space-y-4 bg-slate-900/60 border-slate-700/50">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-sm text-slate-500">
                 <div>
-                  Currently Owned: <span className={`font-semibold ${darkMode ? 'text-white' : 'text-slate-900'}`}>{ownedQuantity} shares</span>
+                  Currently Owned: <span className="font-semibold text-white">{ownedQuantity} shares</span>
                 </div>
                 <div>
-                  Total Estimated Cost: <span className={`font-semibold ${darkMode ? 'text-white' : 'text-slate-900'}`}>₹{(selectedStock.price * tradeQuantity).toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+                  Total Estimated Cost: <span className="font-semibold text-white">₹{(selectedStock.price * tradeQuantity).toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
                 </div>
               </div>
 
@@ -302,7 +302,7 @@ export default function Dashboard({ token, darkMode }) {
                   <input
                     type="number"
                     min="1"
-                    className={`w-full border rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${darkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
+                    className="w-full border rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-800 border-slate-700 text-white"
                     placeholder="Quantity"
                     value={tradeQuantity}
                     onChange={(e) => setTradeQuantity(Math.max(1, parseInt(e.target.value) || 1))}
